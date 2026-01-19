@@ -730,6 +730,28 @@
             box-shadow: 0 0 10px var(--neon-green);
         }
 
+        .connection-status {
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .connection-status.connected {
+            background: rgba(57, 255, 20, 0.2);
+            color: var(--neon-green);
+        }
+
+        .connection-status.disconnected {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff4444;
+        }
+
+        .connection-status.connecting {
+            background: rgba(255, 165, 0, 0.2);
+            color: orange;
+        }
+
         .chat-messages {
             flex: 1;
             overflow-y: auto;
@@ -868,12 +890,18 @@
             transform: translateY(-2px);
         }
 
+        .chat-send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .listeners-list {
             background: rgba(0, 0, 0, 0.8);
             border: 3px solid var(--neon-purple);
             border-radius: 15px;
             padding: 20px;
             box-shadow: 0 0 40px rgba(157, 0, 255, 0.3);
+            overflow-y: auto;
         }
 
         .listeners-header {
@@ -1113,7 +1141,7 @@
         <h2 class="section-title">LISTEN LIVE NOW</h2>
         <div class="radio-player">
             <h3>BUMP THAT RADIO x REAL REACH</h3>
-            <button class="play-button">▶</button>
+            <button class="play-button" id="playButton">▶</button>
             <p class="now-playing">NOW PLAYING: Underground Voices • Live from the Streets</p>
             <p style="color: rgba(255,255,255,0.5); margin-top: 20px; font-family: 'Share Tech Mono', monospace;">
                 Broadcasting truth, music, and resistance 24/7
@@ -1125,69 +1153,23 @@
             <div class="chat-box">
                 <div class="chat-header">
                     <span>LIVE CHAT</span>
-                    <span class="online-count">
-                        <span class="online-dot"></span>
-                        <span id="onlineCount">47</span> LIVE
-                    </span>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span id="connectionStatus" class="connection-status connecting">Connecting...</span>
+                        <span class="online-count">
+                            <span class="online-dot"></span>
+                            <span id="onlineCount">0</span> LIVE
+                        </span>
+                    </div>
                 </div>
                 
                 <div class="chat-messages" id="chatMessages">
-                    <!-- System Welcome Message -->
-                    <div class="chat-message system-message">
-                        <div>
-                            <span class="chat-username">SYSTEM</span>
-                            <span class="chat-timestamp">NOW</span>
-                        </div>
-                        <div class="chat-text">Welcome to Do Your Homework Media live chat! Connect with DJs and listeners worldwide. 🌍</div>
-                    </div>
-
-                    <!-- Sample DJ Message -->
-                    <div class="chat-message dj-message">
-                        <div>
-                            <span class="chat-username">DJ NEON</span>
-                            <span class="chat-timestamp">2:45 PM</span>
-                        </div>
-                        <div class="chat-text">What's good fam! Drop your shout-outs and song requests below! 🎧🔥</div>
-                    </div>
-
-                    <!-- Sample Listener Messages -->
-                    <div class="chat-message">
-                        <div>
-                            <span class="chat-username">TruthSeeker87</span>
-                            <span class="chat-timestamp">2:46 PM</span>
-                        </div>
-                        <div class="chat-text">Yo this track is fire! Shout out from Brooklyn! 🔥</div>
-                    </div>
-
-                    <div class="chat-message">
-                        <div>
-                            <span class="chat-username">RealTalk305</span>
-                            <span class="chat-timestamp">2:47 PM</span>
-                        </div>
-                        <div class="chat-text">Can you play some underground hip-hop? Love what y'all doing!</div>
-                    </div>
-
-                    <div class="chat-message dj-message">
-                        <div>
-                            <span class="chat-username">DJ NEON</span>
-                            <span class="chat-timestamp">2:48 PM</span>
-                        </div>
-                        <div class="chat-text">@RealTalk305 Got you! Coming up next! Stay locked in 📻</div>
-                    </div>
-
-                    <div class="chat-message">
-                        <div>
-                            <span class="chat-username">StreetVoices</span>
-                            <span class="chat-timestamp">2:49 PM</span>
-                        </div>
-                        <div class="chat-text">Much love from Chicago! This is what real radio sounds like 💯</div>
-                    </div>
+                    <!-- Welcome message will be added by JavaScript -->
                 </div>
                 
                 <div class="chat-input-area">
-                    <input type="text" id="usernameInput" class="username-input" placeholder="Your Name" maxlength="20">
-                    <input type="text" id="chatInput" class="chat-input" placeholder="Type your message..." maxlength="200">
-                    <button class="chat-send-btn" onclick="sendMessage()">SEND</button>
+                    <input type="text" id="usernameInput" class="username-input" placeholder="Your Name" maxlength="30">
+                    <input type="text" id="chatInput" class="chat-input" placeholder="Type your message..." maxlength="500">
+                    <button class="chat-send-btn" id="sendBtn">SEND</button>
                 </div>
             </div>
 
@@ -1196,21 +1178,7 @@
                     WHO'S LISTENING
                 </div>
                 <div id="listenersList">
-                    <div class="listener-item dj">DJ NEON (Host)</div>
-                    <div class="listener-item">TruthSeeker87</div>
-                    <div class="listener-item">RealTalk305</div>
-                    <div class="listener-item">StreetVoices</div>
-                    <div class="listener-item">MusicLover23</div>
-                    <div class="listener-item">UrbanPoet</div>
-                    <div class="listener-item">BeatHunter</div>
-                    <div class="listener-item">CypherKing</div>
-                    <div class="listener-item">VibesOnly</div>
-                    <div class="listener-item">RhythmNation</div>
-                    <div class="listener-item">SoulSearcher</div>
-                    <div class="listener-item">BassBoosted</div>
-                    <div class="listener-item">FreestyleFlow</div>
-                    <div class="listener-item">TurntableTech</div>
-                    <div class="listener-item">VinylVibe</div>
+                    <!-- Listeners will be populated dynamically -->
                 </div>
             </div>
         </div>
@@ -1233,12 +1201,12 @@
                 </p>
                 
                 <div class="contact-emails" style="max-width: 600px; margin: 0 auto;">
-                    <a href="/cdn-cgi/l/email-protection#1d6e6d78737e786f336f72707c73725d7078337e7270">
-                        📧 <span class="__cf_email__" data-cfemail="66151603080503144814090b070809260b034805090b">[email&#160;protected]</span>
+                    <a href="mailto:doyourhomework@proton.me">
+                        📧 doyourhomework@proton.me
                     </a>
                     
-                    <a href="/cdn-cgi/l/email-protection#8ee4fbfdfae3ebfae0efeae7efcee9e3efe7e2a0ede1e3" class="secondary-email">
-                        📧 <span class="__cf_email__" data-cfemail="1d77686e69707869737c79747c5d7a707c7471337e7270">[email&#160;protected]</span>
+                    <a href="mailto:smoothoperator@proton.me" class="secondary-email">
+                        📧 smoothoperator@proton.me
                     </a>
                 </div>
 
@@ -1286,7 +1254,7 @@
                     </button>
                 </form>
                 <p style="text-align: center; margin-top: 20px; color: rgba(255,255,255,0.5); font-size: 14px;">
-                    Your message will be sent to both <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c4b7b4a1aaa7a1b6eab6aba9a5aaab84a9a1eaa7aba9">[email&#160;protected]</a> and <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b7ddc2c4c3dad2c3d9d6d3ded6f7d0dad6dedb99d4d8da">[email&#160;protected]</a>
+                    Your message will be sent to both doyourhomework@proton.me and smoothoperator@proton.me
                 </p>
             </div>
         </div>
@@ -1326,8 +1294,8 @@
                     <li><a href="#brands">Our Brands</a></li>
                     <li><a href="#radio">Live Radio</a></li>
                     <li><a href="#contact">Contact Us</a></li>
-                    <li><a href="/cdn-cgi/l/email-protection#fd8e8d98939e988fd38f92909c9392bd9098d39e9290">Submit Story</a></li>
-                    <li><a href="/cdn-cgi/l/email-protection#462c3335322b23322827222f2706212b272f2a6825292b">Get Involved</a></li>
+                    <li><a href="mailto:doyourhomework@proton.me">Submit Story</a></li>
+                    <li><a href="mailto:doyourhomework@proton.me">Get Involved</a></li>
                 </ul>
             </div>
 
@@ -1336,7 +1304,7 @@
                 <p style="color: rgba(255,255,255,0.5); margin-bottom: 15px;">
                     Email us directly for updates and exclusive content
                 </p>
-                <a href="/cdn-cgi/l/email-protection#f28182979c919780dc809d9f939c9db29f97dc919d9f" class="cta-btn primary" style="width: 100%; margin-bottom: 10px; padding: 12px; display: block; text-align: center; text-decoration: none;">
+                <a href="mailto:doyourhomework@proton.me" class="cta-btn primary" style="width: 100%; margin-bottom: 10px; padding: 12px; display: block; text-align: center; text-decoration: none;">
                     EMAIL US
                 </a>
             </div>
@@ -1344,68 +1312,97 @@
 
         <div class="copyright">
             <p>&copy; 2026 Do Your Homework Media. All Rights Reserved. | Truth Without the Anthem</p>
-            <p style="margin-top: 10px;">Contact: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="403330252e2325326e322f2d212e2f002d256e232f2d">[email&#160;protected]</a> | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d2b8a7a1a6bfb7a6bcb3b6bbb392b5bfb3bbbefcb1bdbf">[email&#160;protected]</a></p>
+            <p style="margin-top: 10px;">Contact: doyourhomework@proton.me | smoothoperator@proton.me</p>
         </div>
     </footer>
-    <script src="https://cdn.livepush.io/livepush.min.js"></script>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-        // Smooth scrolling for navigation
-        // LivePush.io Configuration
-        const livePushConfig = {
-            appId: 'YOUR_LIVEPUSH_APP_ID', // Replace with your LivePush.io App ID from dashboard
-            channelName: 'doyourhomework-radio-chat'
-        };
-
-        // Initialize LivePush when ready
-        let livePush = null;
-        try {
-            if (typeof LivePush !== 'undefined') {
-                livePush = new LivePush(livePushConfig.appId);
-                const channel = livePush.subscribe(livePushConfig.channelName);
-                channel.bind('message', function(data) {
-                    displayLivePushMessage(data);
-                });
-                console.log('LivePush.io connected successfully!');
-            }
-        } catch (error) {
-            console.log('Running in demo mode - configure LivePush.io for real-time chat');
-        }
-
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
+    <!-- Socket.IO Library -->
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
+    
+    <script>
+        // ============================================
+        // RAILWAY CHAT SERVER CONNECTION
+        // ============================================
+        const CHAT_SERVER_URL = 'https://dyh-chat-server-production.up.railway.app';
+        
+        // Connect to your Railway chat server
+        const socket = io(CHAT_SERVER_URL, {
+            transports: ['websocket', 'polling'],
+            timeout: 10000,
+            reconnection: true,
+            reconnectionAttempts: 5,
+            reconnectionDelay: 1000
         });
 
-        // Radio player functionality
-        const playButton = document.querySelector('.play-button');
-        let isPlaying = false;
-
-        playButton.addEventListener('click', function() {
-            isPlaying = !isPlaying;
-            this.textContent = isPlaying ? '⏸' : '▶';
-            this.style.background = isPlaying 
-                ? 'linear-gradient(45deg, var(--neon-green), var(--neon-cyan))' 
-                : 'linear-gradient(45deg, var(--neon-pink), var(--neon-purple))';
-        });
-
-        // Live Chat Functionality
-        let username = '';
+        // ============================================
+        // DOM ELEMENTS
+        // ============================================
         const chatMessages = document.getElementById('chatMessages');
         const chatInput = document.getElementById('chatInput');
         const usernameInput = document.getElementById('usernameInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const connectionStatus = document.getElementById('connectionStatus');
+        const onlineCount = document.getElementById('onlineCount');
+        const listenersList = document.getElementById('listenersList');
+        const playButton = document.getElementById('playButton');
 
-        // Auto-scroll chat to bottom
-        function scrollChatToBottom() {
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
+        // ============================================
+        // CONNECTION STATUS HANDLERS
+        // ============================================
+        socket.on('connect', () => {
+            console.log('✅ Connected to chat server!');
+            connectionStatus.textContent = 'Connected';
+            connectionStatus.className = 'connection-status connected';
+            sendBtn.disabled = false;
+            
+            // Add welcome message
+            addSystemMessage('Welcome to Do Your Homework Media live chat! You are now connected. 🎙️');
+        });
 
-        // Get current time
+        socket.on('disconnect', () => {
+            console.log('❌ Disconnected from chat server');
+            connectionStatus.textContent = 'Disconnected';
+            connectionStatus.className = 'connection-status disconnected';
+            sendBtn.disabled = true;
+            
+            addSystemMessage('Connection lost. Attempting to reconnect...');
+        });
+
+        socket.on('connect_error', (error) => {
+            console.log('Connection error:', error);
+            connectionStatus.textContent = 'Connection Error';
+            connectionStatus.className = 'connection-status disconnected';
+        });
+
+        socket.on('reconnect', (attemptNumber) => {
+            console.log('Reconnected after', attemptNumber, 'attempts');
+            addSystemMessage('Reconnected! Welcome back. 🎉');
+        });
+
+        socket.on('reconnect_attempt', (attemptNumber) => {
+            connectionStatus.textContent = `Reconnecting (${attemptNumber})...`;
+            connectionStatus.className = 'connection-status connecting';
+        });
+
+        // ============================================
+        // MESSAGE HANDLERS
+        // ============================================
+        
+        // Receive messages from server (from ALL users)
+        socket.on('message', (data) => {
+            addMessage(data.name, data.text, data.time, false);
+        });
+
+        // Handle errors from server
+        socket.on('error', (errorMsg) => {
+            console.log('Server error:', errorMsg);
+            addSystemMessage('Error: ' + errorMsg);
+        });
+
+        // ============================================
+        // HELPER FUNCTIONS
+        // ============================================
+        
         function getCurrentTime() {
             const now = new Date();
             let hours = now.getHours();
@@ -1417,143 +1414,174 @@
             return hours + ':' + minutes + ' ' + ampm;
         }
 
-        // Send message function
-        function sendMessage() {
-            const message = chatInput.value.trim();
-            const user = usernameInput.value.trim() || 'Anonymous';
-            
-            if (message === '') return;
-            
-            // Create message element
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'chat-message';
-            
-            messageDiv.innerHTML = `
-                <div>
-                    <span class="chat-username">${escapeHtml(user)}</span>
-                    <span class="chat-timestamp">${getCurrentTime()}</span>
-                </div>
-                <div class="chat-text">${escapeHtml(message)}</div>
-            `;
-            
-            chatMessages.appendChild(messageDiv);
-            chatInput.value = '';
-            scrollChatToBottom();
-            
-            // Save username for next message
-            username = user;
-            
-            // Simulate DJ response occasionally
-            if (Math.random() < 0.3) {
-                setTimeout(() => {
-                    simulateDJResponse();
-                }, 2000 + Math.random() * 3000);
-            }
-        }
-
-        // Simulate DJ responses
-        function simulateDJResponse() {
-            const djResponses = [
-                "Good vibes! Keep 'em coming! 🎧",
-                "Love the energy in here! 🔥",
-                "Appreciate the love fam! 💯",
-                "That's what I'm talking about! 📻",
-                "Real recognize real! ✊",
-                "Y'all making this show special! 🌟",
-                "Much love to everyone tuning in! ❤️"
-            ];
-            
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'chat-message dj-message';
-            
-            messageDiv.innerHTML = `
-                <div>
-                    <span class="chat-username">DJ NEON</span>
-                    <span class="chat-timestamp">${getCurrentTime()}</span>
-                </div>
-                <div class="chat-text">${djResponses[Math.floor(Math.random() * djResponses.length)]}</div>
-            `;
-            
-            chatMessages.appendChild(messageDiv);
-            scrollChatToBottom();
-        }
-
-        // Simulate random listener messages
-        function simulateListenerMessage() {
-            const listeners = [
-                'MusicLover23', 'UrbanPoet', 'BeatHunter', 'CypherKing', 
-                'VibesOnly', 'RhythmNation', 'SoulSearcher', 'BassBoosted'
-            ];
-            
-            const messages = [
-                "This is fire! 🔥",
-                "Shout out from the West Coast!",
-                "Best radio station ever! 💯",
-                "Keep the hits coming!",
-                "Y'all doing something special here",
-                "Real music, real voices 🎵",
-                "Much respect to the movement! ✊",
-                "Love this track!",
-                "First time listener, definitely staying!",
-                "This is what we need right now!"
-            ];
-            
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'chat-message';
-            
-            const randomListener = listeners[Math.floor(Math.random() * listeners.length)];
-            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-            
-            messageDiv.innerHTML = `
-                <div>
-                    <span class="chat-username">${randomListener}</span>
-                    <span class="chat-timestamp">${getCurrentTime()}</span>
-                </div>
-                <div class="chat-text">${randomMessage}</div>
-            `;
-            
-            chatMessages.appendChild(messageDiv);
-            scrollChatToBottom();
-            
-            // Keep only last 50 messages
-            while (chatMessages.children.length > 50) {
-                chatMessages.removeChild(chatMessages.firstChild);
-            }
-        }
-
-        // Simulate online count fluctuation
-        function updateOnlineCount() {
-            const count = 45 + Math.floor(Math.random() * 10);
-            document.getElementById('onlineCount').textContent = count;
-        }
-
-        // Escape HTML to prevent XSS
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
         }
 
-        // Enter key to send message
-        chatInput.addEventListener('keypress', function(e) {
+        function scrollChatToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function addMessage(username, text, time, isDJ = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = isDJ ? 'chat-message dj-message' : 'chat-message';
+            
+            messageDiv.innerHTML = `
+                <div>
+                    <span class="chat-username">${escapeHtml(username)}</span>
+                    <span class="chat-timestamp">${time || getCurrentTime()}</span>
+                </div>
+                <div class="chat-text">${escapeHtml(text)}</div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            scrollChatToBottom();
+            
+            // Keep only last 100 messages to prevent memory issues
+            while (chatMessages.children.length > 100) {
+                chatMessages.removeChild(chatMessages.firstChild);
+            }
+        }
+
+        function addSystemMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message system-message';
+            
+            messageDiv.innerHTML = `
+                <div>
+                    <span class="chat-username">SYSTEM</span>
+                    <span class="chat-timestamp">${getCurrentTime()}</span>
+                </div>
+                <div class="chat-text">${escapeHtml(text)}</div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            scrollChatToBottom();
+        }
+
+        // ============================================
+        // SEND MESSAGE FUNCTION
+        // ============================================
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            const user = usernameInput.value.trim() || 'Anonymous';
+            
+            if (message === '') return;
+            
+            if (!socket.connected) {
+                addSystemMessage('Cannot send message - not connected to server.');
+                return;
+            }
+            
+            // Send message to Railway server
+            socket.emit('message', {
+                name: user,
+                text: message,
+                time: getCurrentTime()
+            });
+            
+            // Clear input
+            chatInput.value = '';
+            
+            // Save username in localStorage for convenience
+            localStorage.setItem('dyhChatUsername', user);
+        }
+
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        
+        // Send button click
+        sendBtn.addEventListener('click', sendMessage);
+
+        // Enter key to send
+        chatInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 sendMessage();
             }
         });
 
-        // Auto-populate username field after first message
-        usernameInput.addEventListener('change', function() {
-            username = this.value;
+        // Load saved username from localStorage
+        const savedUsername = localStorage.getItem('dyhChatUsername');
+        if (savedUsername) {
+            usernameInput.value = savedUsername;
+        }
+
+        // ============================================
+        // SMOOTH SCROLLING FOR NAVIGATION
+        // ============================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
         });
 
-        // Simulate activity
-        setInterval(simulateListenerMessage, 15000 + Math.random() * 10000); // Random messages every 15-25 seconds
-        setInterval(updateOnlineCount, 30000); // Update count every 30 seconds
+        // ============================================
+        // RADIO PLAYER (PLACEHOLDER)
+        // ============================================
+        let isPlaying = false;
 
-        // Initial scroll
-        scrollChatToBottom();
+        playButton.addEventListener('click', function() {
+            isPlaying = !isPlaying;
+            this.textContent = isPlaying ? '⏸' : '▶';
+            this.style.background = isPlaying 
+                ? 'linear-gradient(45deg, var(--neon-green), var(--neon-cyan))' 
+                : 'linear-gradient(45deg, var(--neon-pink), var(--neon-purple))';
+            
+            // TODO: Add actual audio streaming when ready
+            if (isPlaying) {
+                addSystemMessage('🎵 Radio player activated! (Audio stream coming soon)');
+            }
+        });
 
-        // Contact form handling
+        // ============================================
+        // ONLINE COUNT SIMULATION
+        // (Replace with real data when server supports it)
+        // ============================================
+        function updateOnlineCount() {
+            // This simulates online count - your server can send real data later
+            const baseCount = 15;
+            const variation = Math.floor(Math.random() * 10);
+            onlineCount.textContent = baseCount + variation;
+        }
+
+        // Update count periodically
+        setInterval(updateOnlineCount, 30000);
+        updateOnlineCount(); // Initial update
+
+        // ============================================
+        // LISTENERS LIST (PLACEHOLDER)
+        // ============================================
+        function updateListenersList() {
+            // Placeholder listeners - server can provide real data later
+            const placeholderListeners = [
+                { name: 'DJ 3rd Eye', isDJ: true },
+                { name: 'TruthSeeker87', isDJ: false },
+                { name: 'RealTalk305', isDJ: false },
+                { name: 'StreetVoices', isDJ: false },
+                { name: 'MusicLover23', isDJ: false }
+            ];
+            
+            listenersList.innerHTML = '';
+            placeholderListeners.forEach(listener => {
+                const div = document.createElement('div');
+                div.className = listener.isDJ ? 'listener-item dj' : 'listener-item';
+                div.textContent = listener.isDJ ? `${listener.name} (Host)` : listener.name;
+                listenersList.appendChild(div);
+            });
+        }
+
+        updateListenersList();
+
+        // ============================================
+        // CONTACT FORM HANDLING
+        // ============================================
         document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -1563,7 +1591,18 @@
             const brand = formData.get('brand');
             const message = formData.get('message');
             
-            // Create mailto link with both emails
+            // Create mailto link
             const subject = encodeURIComponent(`DYH Media Contact: ${brand}`);
             const body = encodeURIComponent(`From: ${name}\nEmail: ${email}\nBrand: ${brand}\n\nMessage:\n${message}`);
-            const mailtoLink = `mailt
+            const mailtoLink = `mailto:doyourhomework@proton.me,smoothoperator@proton.me?subject=${subject}&body=${body}`;
+            
+            window.location.href = mailtoLink;
+        });
+
+        // ============================================
+        // INITIAL WELCOME MESSAGE
+        // ============================================
+        addSystemMessage('Connecting to Do Your Homework Media chat server...');
+    </script>
+</body>
+</html>
